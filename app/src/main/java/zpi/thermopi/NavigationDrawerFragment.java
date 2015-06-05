@@ -15,6 +15,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,11 +23,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +81,8 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
-
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
@@ -118,9 +125,30 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     }
 
     public List<NavigationItem> getMenu() {
-        List<NavigationItem> items = new ArrayList<NavigationItem>();
-        items.add(new NavigationItem("Terarrium 1", ResourcesCompat.getDrawable(getResources(),R.drawable.ic_menu_check,null)));
-        items.add(new NavigationItem("Terarrium 2", ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_check, null)));
+        List<NavigationItem> items = new ArrayList<>();
+        //ResourcesCompat.getDrawable(getResources(),R.drawable.ic_menu_check
+        JSONParser jsonParser=new JSONParser();
+        String jsonStr=jsonParser.makeServiceCall("http://thermowebapi.azurewebsites.net/Api/TerrariumsDevices",1);
+
+        if (jsonStr != null) {
+            try {
+                JSONArray terra=new JSONArray(jsonStr);
+
+
+
+                for(int i=0;i<terra.length();i++)
+                {
+                    JSONObject c = terra.getJSONObject(i);
+                    items.add(new NavigationItem(c.getString("Name"), ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_check, null), c.getInt("Id")));
+
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //items.add(new NavigationItem("Name", ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_check, null), 1));
 
         return items;
     }

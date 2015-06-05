@@ -6,10 +6,12 @@ import android.graphics.drawable.Drawable;
 public class NavigationItem {
     private String mText;
     private Drawable mDrawable;
+    private int Id;
 
-    public NavigationItem(String text, Drawable drawable) {
+    public NavigationItem(String text, Drawable drawable, int id) {
         mText = text;
         mDrawable = drawable;
+        Id = id;
     }
 
     public String getText() {
