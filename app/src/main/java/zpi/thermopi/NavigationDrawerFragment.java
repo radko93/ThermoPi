@@ -72,7 +72,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
-
+    List<NavigationItem> navigationItems;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +99,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         mDrawerList.setLayoutManager(layoutManager);
         mDrawerList.setHasFixedSize(true);
 
-        final List<NavigationItem> navigationItems = getMenu();
+        navigationItems = getMenu();
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(navigationItems);
         adapter.setNavigationDrawerCallbacks(this);
         mDrawerList.setAdapter(adapter);
@@ -126,15 +126,13 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
     public List<NavigationItem> getMenu() {
         List<NavigationItem> items = new ArrayList<>();
-        //ResourcesCompat.getDrawable(getResources(),R.drawable.ic_menu_check
+
         JSONParser jsonParser=new JSONParser();
         String jsonStr=jsonParser.makeServiceCall("http://thermowebapi.azurewebsites.net/Api/TerrariumsDevices",1);
 
         if (jsonStr != null) {
             try {
                 JSONArray terra=new JSONArray(jsonStr);
-
-
 
                 for(int i=0;i<terra.length();i++)
                 {
@@ -215,6 +213,11 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
         ((NavigationDrawerAdapter) mDrawerList.getAdapter()).selectPosition(position);
+    }
+
+    public NavigationItem getSelectedItemId(int mCurrentSelectedPosition)
+    {
+        return navigationItems.get(mCurrentSelectedPosition);
     }
 
     public void openDrawer() {

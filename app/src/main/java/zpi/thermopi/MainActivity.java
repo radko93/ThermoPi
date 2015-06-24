@@ -3,9 +3,6 @@ package zpi.thermopi;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -15,27 +12,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerCallbacks {
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
 
+    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private ViewPager viewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
-        setSupportActionBar(mToolbar);
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+
+        setupNavigationDrawer();
+        setupViewPager();
+
+    }
+
+    private void setupNavigationDrawer()
+    {
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+        setSupportActionBar(mToolbar);
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.fragment_drawer);
 
@@ -43,10 +44,13 @@ public class MainActivity extends AppCompatActivity
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
         // populate the navigation drawer
         mNavigationDrawerFragment.setUserData("Jan Kalinicz", "test@pwr.edu.pl", BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
+    }
+    private void setupViewPager()
+    {
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(),
-                MainActivity.this));
+                MainActivity.this, mNavigationDrawerFragment.getSelectedItemId(0).getId()));
 
         viewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
             @Override
@@ -55,12 +59,17 @@ public class MainActivity extends AppCompatActivity
                 page.setAlpha(normalizedposition);
             }
         });
-
     }
+
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
+
+        if(mNavigationDrawerFragment!=null && viewPager!=null) {
+            MyPagerAdapter adapter = (MyPagerAdapter) viewPager.getAdapter();
+            adapter.setTerarriumId(mNavigationDrawerFragment.getSelectedItemId(position).getId());
+        }
+
 
     }
 
@@ -94,30 +103,7 @@ public class MainActivity extends AppCompatActivity
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
 
     }
-    public static class MyPagerAdapter extends FragmentPagerAdapter {
-        private static int NUM_ITEMS = 2;
 
-
-        public MyPagerAdapter(FragmentManager fragmentManager, MainActivity mainActivity) {
-            super(fragmentManager);
-        }
-
-
-        @Override
-        public int getCount() {
-            return NUM_ITEMS;
-        }
-
-
-        @Override
-        public Fragment getItem(int position) {
-
-            return zpi.thermopi.WebViewFragment.newInstance(position);
-
-        }
-
-
-    }
 }
 
 

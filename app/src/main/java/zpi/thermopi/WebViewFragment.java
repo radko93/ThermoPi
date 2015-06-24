@@ -18,11 +18,13 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private int page;
     private WebView webView;
     private SwipeRefreshLayout swipeLayout;
+    private int[] devices;
 
-    public static WebViewFragment newInstance(int page) {
+    public static WebViewFragment newInstance(int page, int[] devices) {
         WebViewFragment fragmentFirst = new WebViewFragment();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
+        args.putIntArray("devices",devices);
         fragmentFirst.setArguments(args);
         return fragmentFirst;
     }
@@ -32,7 +34,7 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("someInt", 0);
-
+        devices = getArguments().getIntArray("devices");
 
 
     }
@@ -49,6 +51,8 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,8 +62,10 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
         webView.getSettings().setJavaScriptEnabled(true);
 
 
+
         switch (page)
         {
+
             case 0:
                 webView.loadUrl("http://thermopi.azurewebsites.net/PieChartMobile.html");
                 break;
@@ -68,6 +74,7 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 break;
 
         }
+        webView.loadUrl("javascript:parseDevices("+devices[0]+","+devices[1]+","+devices[2]+")");
 
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);

@@ -14,6 +14,7 @@ public class NavigationItem {
         Id = id;
     }
 
+
     public String getText() {
         return mText;
     }
@@ -28,5 +29,9 @@ public class NavigationItem {
 
     public void setDrawable(Drawable drawable) {
         mDrawable = drawable;
+    }
+
+    public int getId() {
+        return Id;
     }
 }
