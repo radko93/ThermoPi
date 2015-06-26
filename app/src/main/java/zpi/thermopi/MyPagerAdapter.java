@@ -3,7 +3,6 @@ package zpi.thermopi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.res.ResourcesCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,12 +50,11 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
                 for(int i=0;i<devicesJson.length();i++)
                 {
                     JSONObject c = devicesJson.getJSONObject(i);
-
-                    if(c.getBoolean("IsOutput"))
+                    JSONObject deviceType = c.getJSONObject("DeviceType");
+                    if (deviceType.getBoolean("IsOutput"))
                         outputDevices[outputCounter++] = c.getInt("Id");
                     else
                         inputDevices[inputCounter++] = c.getInt("Id");
-
                 }
 
             } catch (JSONException e) {
