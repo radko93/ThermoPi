@@ -146,7 +146,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
             }
         }
 
-        //items.add(new NavigationItem("Name", ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_check, null), 1));
+        items.add(new NavigationItem("Name", ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_check, null), 1));
 
         return items;
     }
