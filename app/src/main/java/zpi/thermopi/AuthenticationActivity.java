@@ -14,13 +14,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class AuthenticationActivity extends AccountAuthenticatorActivity {
+
     public static final String PARAM_AUTHTOKEN_TYPE = "auth.token";
     public static final String PARAM_CREATE = "create";
 
@@ -133,9 +138,12 @@ public class AuthenticationActivity extends AccountAuthenticatorActivity {
             editor.putString("username",Id);
             editor.putBoolean("isAuthenticated",true);
             editor.commit();
+
             finishActivity(0);
         }
+
     }
+
 
 }
 

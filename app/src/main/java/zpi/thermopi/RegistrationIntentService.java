@@ -89,19 +89,21 @@ public class RegistrationIntentService extends IntentService {
         Context context = getApplicationContext();
         SharedPreferences sharedPref = context.getSharedPreferences(
                 getString(R.string.prefs_file_name), Context.MODE_PRIVATE);
-        String userId=sharedPref.getString("UserId", "undefined");
+        String userId=sharedPref.getString("username", "undefined");
         List<NameValuePair> params = new ArrayList<NameValuePair>();
 
         params.add(new BasicNameValuePair("Name", android.os.Build.MANUFACTURER + android.os.Build.PRODUCT));
 
         if(token!=null && userId!="undefined") {
             params.add(new BasicNameValuePair("DeviceId", token));
-            params.add(new BasicNameValuePair("AppNetUserId", userId));
+            params.add(new BasicNameValuePair("AspNetUserId", userId));
         }
 
         JSONParser jsonParser=new JSONParser();
 
-        jsonParser.makeServiceCall("http://thermowebapi.azurewebsites.net/Api/GcmDevices",1,params);
+
+        Log.d("gcmreg", jsonParser.makeServiceCall("http://thermowebapi.azurewebsites.net/Api/GcmDevices",2,params));
+        //jsonParser.makeServiceCall("http://postcatcher.in/catchers/55a420a2eb7520030000049b",2,params);
     }
 
     /**

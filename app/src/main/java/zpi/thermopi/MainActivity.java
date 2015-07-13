@@ -28,8 +28,9 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerCallbacks {
 
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
+
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private ViewPager viewPager;
@@ -65,12 +66,12 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
+
 
         setupNavigationDrawer();
         setupViewPager();
