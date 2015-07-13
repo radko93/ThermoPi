@@ -3,6 +3,7 @@
 package zpi.thermopi;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -13,11 +14,23 @@ import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
+    public static final String MyPREFERENCES = "MyPrefs" ;
     private static final String[] TOPICS = {"global"};
 
     public RegistrationIntentService() {
@@ -40,9 +53,6 @@ public class RegistrationIntentService extends IntentService {
                 String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                         GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
                 // [END get_token]
-                Log.d(TAG, "==========================================================================" + token);
-
-                Log.i(TAG, "GCM Registration Token: " + token);
 
                 // TODO: Implement this method to send any registration to your app's servers.
                 sendRegistrationToServer(token);
@@ -75,8 +85,23 @@ public class RegistrationIntentService extends IntentService {
      *
      * @param token The new token.
      */
-    private void sendRegistrationToServer(String token) {
-        // Add custom implementation, as needed.
+    private void sendRegistrationToServer(String token) throws JSONException {
+        Context context = getApplicationContext();
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                getString(R.string.prefs_file_name), Context.MODE_PRIVATE);
+        String userId=sharedPref.getString("UserId", "undefined");
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new BasicNameValuePair("Name", android.os.Build.MANUFACTURER + android.os.Build.PRODUCT));
+
+        if(token!=null && userId!="undefined") {
+            params.add(new BasicNameValuePair("DeviceId", token));
+            params.add(new BasicNameValuePair("AppNetUserId", userId));
+        }
+
+        JSONParser jsonParser=new JSONParser();
+
+        Log.d("====DEVICES===", jsonParser.makeServiceCall("http://thermowebapi.azurewebsites.net/Api/GcmDevices",1,params));
     }
 
     /**

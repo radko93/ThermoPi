@@ -1,5 +1,7 @@
 package zpi.thermopi;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,8 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -38,9 +38,21 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Context context = getApplicationContext();
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                getString(R.string.prefs_file_name), Context.MODE_PRIVATE);
+        Boolean isAuth= sharedPref.getBoolean("isAuthenticated", false);
+        AccountManager accountManager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+        Account[] list = accountManager.getAccountsByType("zpi.thermopi");
+
+        if(!isAuth && list.length==0)
+        {
+            startActivityForResult(new Intent(this, AuthenticationActivity.class), 0);
+        }
+
+        //list[0].name
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

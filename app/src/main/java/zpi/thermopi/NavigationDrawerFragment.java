@@ -2,6 +2,7 @@ package zpi.thermopi;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -30,6 +31,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -126,9 +129,14 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
     public List<NavigationItem> getMenu() {
         List<NavigationItem> items = new ArrayList<>();
+        Context context = getActivity().getApplicationContext();
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                getString(R.string.prefs_file_name), Context.MODE_PRIVATE);
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("id",sharedPref.getString("username","null")));
 
         JSONParser jsonParser=new JSONParser();
-        String jsonStr=jsonParser.makeServiceCall("http://thermowebapi.azurewebsites.net/Api/TerrariumsDevices",1);
+        String jsonStr=jsonParser.makeServiceCall("http://thermowebapi.azurewebsites.net/Api/UserTerrariums",1,params);
 
         if (jsonStr != null) {
             try {

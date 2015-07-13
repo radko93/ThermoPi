@@ -67,10 +67,10 @@ public class WebViewFragment extends Fragment implements SwipeRefreshLayout.OnRe
         {
 
             case 0:
-                webView.loadUrl("http://thermopi.azurewebsites.net/PieChartMobile.html?temp=" + devices[0] + "&hum=" + devices[1] + "&light=" + devices[2]);
+                webView.loadUrl("http://thermopi.azurewebsites.net/PieChartMobile.html?temp=" + devices[2] + "&hum=" + devices[1] + "&light=" + devices[0]);
                 break;
             case 1:
-                webView.loadUrl("http://thermopi.azurewebsites.net/LineChartMobile.html?temp=" + devices[0] + "&hum=" + devices[1] + "&light=" + devices[2]);
+                webView.loadUrl("http://thermopi.azurewebsites.net/LineChartMobile.html?temp=" + devices[2] + "&hum=" + devices[1] + "&light=" + devices[0]);
                 break;
 
         }
