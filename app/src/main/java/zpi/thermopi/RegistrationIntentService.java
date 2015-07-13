@@ -101,7 +101,7 @@ public class RegistrationIntentService extends IntentService {
 
         JSONParser jsonParser=new JSONParser();
 
-        Log.d("====DEVICES===", jsonParser.makeServiceCall("http://thermowebapi.azurewebsites.net/Api/GcmDevices",1,params));
+        jsonParser.makeServiceCall("http://thermowebapi.azurewebsites.net/Api/GcmDevices",1,params);
     }
 
     /**

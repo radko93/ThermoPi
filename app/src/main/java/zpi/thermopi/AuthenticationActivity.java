@@ -90,7 +90,9 @@ public class AuthenticationActivity extends AccountAuthenticatorActivity {
 
         String result = jsonParser.makeServiceCall("http://thermowebapi.azurewebsites.net/Api/Users", 1, params);
         String Id = result.substring(1, result.length() - 1);
-        Log.d("=====ID====",Id);
+        Log.d("userid",Id);
+        if(Id.length()>79)
+            hasErrors=true;
 
 
 
@@ -105,7 +107,7 @@ public class AuthenticationActivity extends AccountAuthenticatorActivity {
 
         if (hasErrors) {
 
-            // handle errors
+            Log.d("loginerror", "some error at login"+Id);
 
         } else {
 
@@ -130,6 +132,7 @@ public class AuthenticationActivity extends AccountAuthenticatorActivity {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("username",Id);
             editor.putBoolean("isAuthenticated",true);
+            editor.commit();
             finishActivity(0);
         }
     }

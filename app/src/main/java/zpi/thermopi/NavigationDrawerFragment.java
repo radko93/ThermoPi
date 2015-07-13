@@ -134,9 +134,9 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
                 getString(R.string.prefs_file_name), Context.MODE_PRIVATE);
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("id",sharedPref.getString("username","null")));
-
+        Log.d("aspid",params.get(0).getValue());
         JSONParser jsonParser=new JSONParser();
-        String jsonStr=jsonParser.makeServiceCall("http://thermowebapi.azurewebsites.net/Api/UserTerrariums",1,params);
+        String jsonStr=jsonParser.makeServiceCall("http://thermowebapi.azurewebsites.net/api/UserTerrariums",1,params);
 
         if (jsonStr != null) {
             try {
